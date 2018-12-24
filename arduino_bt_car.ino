@@ -8,10 +8,10 @@
 
 
 /*##########################
-###     SABİTLER         ###
-#########################*/
+###     SABİTLER         ###    //Bu kısımda bluetoot tan gelen verileri tanımladık. 
+##########################*/
 
-char OKUNAN_DEGER = 0;
+char OKUNAN_DEGER = 0; 
 char ON_FARLARI_YAK ='W';
 char ON_FARLARI_SONDUR ='w';
 
@@ -37,7 +37,7 @@ char GERI_SOL = 'H';
 char TUM_MOTORLARI_DURDUR = 'S';
 char TUMUNU_DURDUR = 'D';
 
-bool DORTLU_YANSIN_MI=false;
+bool DORTLU_YANSIN_MI=false;   //bu kısımda her motor hereketine bağlı led yanma söz konusu olduğu için led kontrolü yaptırmak için bool olarak tanımladık.
 bool SIREN_CALSIN_MI=false;
 bool KORNA_CALSIN_MI=false;
 
@@ -48,7 +48,7 @@ bool SAG_FARLAR_YANIYOR_MU=false;
 bool SOL_FARLAR_YANIYOR_MU=false;
 
 /*##########################
-###     PİNLER           ###
+###     PİNLER           ###    //bu kısımda arduinoya bağlı pin girişlerini tanımladık.
 ##########################*/
 
 int MOTOR_IG_KIRMIZI=9;
@@ -69,9 +69,9 @@ int BUZZER=4;
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(9600);             //bluetoot haberleşmesi için serial bağlantısını sağladık.
   
-  pinMode(MOTOR_IG_KIRMIZI,OUTPUT);  //Kırmızı + olan
+  pinMode(MOTOR_IG_KIRMIZI,OUTPUT);  // burada pinleri çıkış pin i olarak tanımladık.   //Kırmızı + olan
   pinMode(MOTOR_IG_BEYAZ,OUTPUT);    //Beyaz - olan
   pinMode(MOTOR_SS_KIRMIZI,OUTPUT);
   pinMode(MOTOR_SS_BEYAZ,OUTPUT);
@@ -86,13 +86,13 @@ void loop() {
   
     if(Serial.available() > 0) //eğer seri bağlantı aktif ise
     {
-       OKUNAN_DEGER = Serial.read();//bluetoothtan gelen değeri yakaladım
-       Serial.print(OKUNAN_DEGER);  //görmek için ekrana bastım
+       OKUNAN_DEGER = Serial.read();//bluetoothtan gelen değeri yakaladık.
+       Serial.print(OKUNAN_DEGER);  //gelen değeri görmek için ekrana bastık.
        bluetoothDegerleriniOku();
     }  
 
 
-  if(DORTLU_YANSIN_MI) 
+  if(DORTLU_YANSIN_MI)    //Burada Led,korna,siren vb kontrolleri yaptırdık.
   {
     dortluYak();
   }
@@ -125,7 +125,7 @@ void loop() {
 ##########################*/
 
 
-void bluetoothDegerleriniOku()    //bluetoot verilerini okuyor
+void bluetoothDegerleriniOku()    //bu kısımda bluetoot verilerini okuttuk.
 {
     if(OKUNAN_DEGER==ON_FARLARI_YAK) {
         digitalWrite(ON_FAR_SAG, HIGH); 
@@ -190,12 +190,12 @@ void bluetoothDegerleriniOku()    //bluetoot verilerini okuyor
 }
 
 
-void ileriGit(){
+void ileriGit(){                             //Burada aracın ileri gitmesini sağlayan metodu yazdık.
   digitalWrite(MOTOR_IG_KIRMIZI,HIGH);
   digitalWrite(MOTOR_IG_BEYAZ,LOW);
 }
 
-void geriGit(){
+void geriGit(){                              //Burada aracın geri gitmesini ve geri gelirken hem arka lamba hemde siren çalmasını sağlayan metodu yazdık.
   digitalWrite(MOTOR_IG_KIRMIZI,LOW);
   digitalWrite(MOTOR_IG_BEYAZ,HIGH);
   SIREN_CALSIN_MI=true;
@@ -205,7 +205,7 @@ void geriGit(){
 }
 
 
-void solaDondur(){
+void solaDondur(){                            //Burada aracın sola dönmesini ve sol sinyallerinin yanmasını sağlayan metodu yazdık.
   digitalWrite(MOTOR_SS_KIRMIZI,HIGH);
   digitalWrite(MOTOR_SS_BEYAZ,LOW);
   digitalWrite(MOTOR_SS_BEYAZ,LOW);  
@@ -214,7 +214,7 @@ void solaDondur(){
   SOL_FARLAR_YANIYOR_MU=true;
 }
 
-void sagaDondur(){
+void sagaDondur(){                            //Burada aracın sağa dönmesini ve sağ sinyallerinin yanmasını sağlayan metodu yazdık.
   digitalWrite(MOTOR_SS_KIRMIZI,LOW);
   digitalWrite(MOTOR_SS_BEYAZ,HIGH);
   digitalWrite(ON_FAR_SAG, HIGH); 
@@ -222,27 +222,27 @@ void sagaDondur(){
   SAG_FARLAR_YANIYOR_MU=true;
 }
 
-void ileriSagaGit(){
+void ileriSagaGit(){                        //Burada aracın ileri ve sağa gitmesini sağlayan metodu yazdık.  
   ileriGit();
   sagaDondur();
 }
 
-void ileriSolaGit(){
+void ileriSolaGit(){                        //Burada aracın ileri ve sola gitmesini sağlayan metodu yazdık.   
   ileriGit();
   solaDondur();
 }
 
-void geriSagaGit(){
+void geriSagaGit(){                         //Burada aracın geri ve sağa gitmesini sağlayan metodu yazdık.
   geriGit();
   sagaDondur();
 }
 
-void geriSolaGit(){
+void geriSolaGit(){                         //Burada aracın geri ve sola gitmesini sağlayan metodu yazdık.
   geriGit();
   solaDondur();
 }
 
-void tumMotorlariDurdur(){
+void tumMotorlariDurdur(){                  //Bu kısımda bluetoot tan hiçbir veri gelmemesi halinde aaracın hiçbirşey yapmaması için tüm motor led vb. kontrolleri durdurduk
   digitalWrite(MOTOR_SS_KIRMIZI,LOW);
   digitalWrite(MOTOR_SS_BEYAZ,LOW);
   digitalWrite(MOTOR_IG_KIRMIZI,LOW);
@@ -257,7 +257,7 @@ void tumMotorlariDurdur(){
   SOL_FARLAR_YANIYOR_MU=false;
 }
 
-void kornaCal(){
+void kornaCal(){                          //Bu kısımda araçta çalacak olan kornanın tonlarını içeren metodu yazdık.
   //tone(pin,frekans,süre)
   tone(BUZZER, 3000,250); //250 milisaniye ses çal.
   delay(400); //400 milisaniye dur.
@@ -265,12 +265,12 @@ void kornaCal(){
   delay(2000); //2000 milisaniye dur.   
 }
 
-void sirenCal(){            //Geri gelirken
+void sirenCal(){                          //Bu kısımada aracın geri gelirken çalması gereken siren metodunu yazdık. 
   tone(BUZZER, 3000,250); //250 milisaniye ses çal.
   delay(300); //400 milisaniye dur.  
 }
 
-void dortluYak(){
+void dortluYak(){                         //Bu kısımda aracın tüm farlarının(dörtlü) yanıp sönmesini sağlayan metodu yazdık.
   digitalWrite(ON_FAR_SAG, HIGH);
   digitalWrite(ON_FAR_SOL, HIGH);
   digitalWrite(ARKA_FAR_SAG, HIGH);
@@ -283,7 +283,7 @@ void dortluYak(){
   delay(400);
 }
 
-void dortluSondur(){
+void dortluSondur(){                      //Bu kısımda dörtlülerin sönmesini sağlayan kontrolleri yaptırdık.
   
   if(ARKA_FAR_YANIYOR_MU!=true) 
   {
